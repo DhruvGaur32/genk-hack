@@ -9,17 +9,25 @@ import { Label } from "@/components/ui/label"
 import { Sparkles, Send } from "lucide-react"
 
 interface PromptEditorProps {
-    onGenerate: (prompt: string) => void
+    onVisualGenerate: (prompt: string) => void
+    onAudioGenerate: (prompt: string, fileName?: string) => void | Promise<any>
     isLoading?: boolean
 }
 
-export function PromptEditor({ onGenerate, isLoading = false }: PromptEditorProps) {
-    const [prompt, setPrompt] = useState("")
+export function PromptEditor({ onVisualGenerate,onAudioGenerate, isLoading = false }: PromptEditorProps) {
+    const [AudioPrompt, setAudioPrompt] = useState("")
+    const [VisualPrompt, setVisualPrompt] = useState("")
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleVisualSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (prompt.trim()) {
-            onGenerate(prompt.trim())
+        if (VisualPrompt.trim()) {
+            onVisualGenerate(VisualPrompt.trim())
+        }
+    }
+    const handleAudioSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (AudioPrompt.trim()) {
+            onAudioGenerate(AudioPrompt.trim())
         }
     }
 
@@ -34,20 +42,52 @@ export function PromptEditor({ onGenerate, isLoading = false }: PromptEditorProp
     return (
         <div className="space-y-6">
             <div>
-                <Label htmlFor="prompt" className="text-white font-mono text-sm mb-3 block">
-                    Describe your customization
+                <Label htmlFor="VisualPrompt" className="text-white font-mono text-sm mb-3 block">
+                    Describe your visual customization
                 </Label>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleVisualSubmit} className="space-y-4">
                     <Textarea
-                        id="prompt"
+                        id="VisualPrompt"
                         placeholder="e.g., Make the header blue, add a contact form, change the layout to 3 columns..."
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
+                        value={VisualPrompt}
+                        onChange={(e) => setVisualPrompt(e.target.value)}
                         className="min-h-[120px] bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 font-mono text-sm resize-none focus:border-blue-500 focus:ring-blue-500/20"
                     />
                     <Button
                         type="submit"
-                        disabled={!prompt.trim() || isLoading}
+                        disabled={!VisualPrompt.trim() || isLoading}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-mono"
+                    >
+                        {isLoading ? (
+                            <>
+                                <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                                Generating...
+                            </>
+                        ) : (
+                            <>
+                                <Send className="w-4 h-4 mr-2" />
+                                Generate Updated Template
+                            </>
+                        )}
+                    </Button>
+                </form>
+            </div>
+
+            <div>
+                <Label htmlFor="AudioPrompt" className="text-white font-mono text-sm mb-3 block">
+                    Describe your audio customization
+                </Label>
+                <form onSubmit={handleAudioSubmit} className="space-y-4">
+                    <Textarea
+                        id="AudioPrompt"
+                        placeholder="e.g., Make the header blue, add a contact form, change the layout to 3 columns..."
+                        value={AudioPrompt}
+                        onChange={(e) => setAudioPrompt(e.target.value)}
+                        className="min-h-[120px] bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 font-mono text-sm resize-none focus:border-blue-500 focus:ring-blue-500/20"
+                    />
+                    <Button
+                        type="submit"
+                        disabled={!AudioPrompt.trim() || isLoading}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-mono"
                     >
                         {isLoading ? (
@@ -72,7 +112,7 @@ export function PromptEditor({ onGenerate, isLoading = false }: PromptEditorProp
                     {examplePrompts.map((example, index) => (
                         <button
                             key={index}
-                            onClick={() => setPrompt(example)}
+                            onClick={() => setAudioPrompt(example)}
                             className="block w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:text-white transition-colors font-mono"
                         >
                             {example}

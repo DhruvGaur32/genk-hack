@@ -25,7 +25,7 @@ export function TemplateCard({ template }: TemplateCardProps) {
             {/* Preview Image */}
             <div className="relative aspect-video bg-gray-800 overflow-hidden">
                 <Image
-                    src={template.previewImage || "/placeholder.svg"}
+                    src={template.previewImage || "/assets/whackamole.png"}
                     alt={template.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -2,7 +2,7 @@ import type { Template } from "@/types/template"
 import fs from "fs"
 import path from "path"
 const html = fs.readFileSync(
-    path.join(process.cwd(), "public/whack_a_mole.html"),
+    path.join(process.cwd(), "public/templates/whack_a_mole.html"),
     "utf-8"
   )
 export const templates: Template[] = [
@@ -11,7 +11,7 @@ export const templates: Template[] = [
         title: "WhackAMole",
         description: "Modern dashboard with charts, metrics, and real-time data visualization",
         category: "Dashboard",
-        previewImage: "/placeholder.svg?height=200&width=300",
+        previewImage: "/assets/whackamole.png",
         tags: ["React", "Charts", "Analytics"],
         html: html,
     },

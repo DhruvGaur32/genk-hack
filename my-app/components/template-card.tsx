@@ -29,6 +29,7 @@ export function TemplateCard({ template }: TemplateCardProps) {
                     alt={template.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

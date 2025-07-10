@@ -1,8 +1,28 @@
-import { Header } from "@/components/header"
-import { TemplateCard } from "@/components/template-card"
-import { templates } from "@/data/templates"
+"use client";
+
+import { Header } from "@/components/header";
+import { TemplateCard } from "@/components/template-card";
+// import templates from "@/data/template.json";
+import { useEffect, useState } from "react";
+import type { Template } from "@/types/template";
 
 export default function HomePage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+
+  useEffect(() => {
+    const response = fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/templates", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setTemplates(data);
+          console.log("Fetched templates:", data);
+        }
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-950">
       <Header />
@@ -16,8 +36,8 @@ export default function HomePage() {
             pre-built templates
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto font-mono">
-            Choose from our collection of production-ready templates. Customize with AI-powered prompts and deploy in
-            minutes.
+            Choose from our collection of production-ready templates. Customize
+            with AI-powered prompts and deploy in minutes.
           </p>
         </div>
 
@@ -31,19 +51,27 @@ export default function HomePage() {
         {/* Stats */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-xl">
-            <div className="text-3xl font-bold text-blue-400 font-mono mb-2">7</div>
-            <div className="text-gray-400 font-mono text-sm">Templates Available</div>
+            <div className="text-3xl font-bold text-blue-400 font-mono mb-2">
+              7
+            </div>
+            <div className="text-gray-400 font-mono text-sm">
+              Templates Available
+            </div>
           </div>
           <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-xl">
-            <div className="text-3xl font-bold text-green-400 font-mono mb-2">{"<5min"}</div>
+            <div className="text-3xl font-bold text-green-400 font-mono mb-2">
+              {"<5min"}
+            </div>
             <div className="text-gray-400 font-mono text-sm">Setup Time</div>
           </div>
           <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-xl">
-            <div className="text-3xl font-bold text-purple-400 font-mono mb-2">100%</div>
+            <div className="text-3xl font-bold text-purple-400 font-mono mb-2">
+              100%
+            </div>
             <div className="text-gray-400 font-mono text-sm">TypeScript</div>
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

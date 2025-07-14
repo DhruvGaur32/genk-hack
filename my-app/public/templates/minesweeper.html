@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini Bomb Finder</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      h1 {
+        color: #444;
+      }
+      #game {
+        display: grid;
+        grid-template-columns: repeat(5, 60px);
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .tile {
+        width: 60px;
+        height: 60px;
+        background-color: #ddd;
+        border: 1px solid #aaa;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 60px;
+        user-select: none;
+      }
+      .tile.clicked {
+        background-color: #9fd;
+        cursor: default;
+      }
+      .tile.bomb {
+        background-color: #f66;
+      }
+      #status {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+      button {
+        margin-top: 15px;
+        padding: 8px 16px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>💣 Bomb Finder Game</h1>
+    <div id="game"></div>
+    <div id="status"></div>
+    <button onclick="startGame()">Restart Game</button>
+
+    <script>
+      const gridSize = 5;
+      const bombCount = 3;
+      let bombPositions = new Set();
+      let revealedTiles = 0;
+
+      function startGame() {
+        const game = document.getElementById("game");
+        game.innerHTML = "";
+        document.getElementById("status").textContent = "";
+        revealedTiles = 0;
+
+        // Generate bomb positions
+        bombPositions = new Set();
+        while (bombPositions.size < bombCount) {
+          bombPositions.add(Math.floor(Math.random() * (gridSize * gridSize)));
+        }
+
+        // Create tiles
+        for (let i = 0; i < gridSize * gridSize; i++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.dataset.index = i;
+          tile.onclick = handleClick;
+          game.appendChild(tile);
+        }
+      }
+
+      function handleClick() {
+        const index = parseInt(this.dataset.index);
+        if (this.classList.contains("clicked")) return;
+
+        if (bombPositions.has(index)) {
+          this.classList.add("bomb");
+          this.textContent = "💥";
+          document.getElementById("status").textContent =
+            "Game Over! You hit a bomb!";
+          revealAllBombs();
+          disableAllTiles();
+        } else {
+          this.classList.add("clicked");
+          this.textContent = "✔️";
+          revealedTiles++;
+          if (revealedTiles === gridSize * gridSize - bombCount) {
+            document.getElementById("status").textContent = "🎉 You Win!";
+            disableAllTiles();
+          }
+        }
+      }
+
+      function revealAllBombs() {
+        const tiles = document.querySelectorAll(".tile");
+        bombPositions.forEach((index) => {
+          const tile = tiles[index];
+          tile.classList.add("bomb");
+          tile.textContent = "💣";
+        });
+      }
+
+      function disableAllTiles() {
+        const tiles = document.querySelectorAll(".tile");
+        tiles.forEach((tile) => (tile.onclick = null));
+      }
+
+      startGame(); // Start game on load
+    </script>
+  </body>
+</html>

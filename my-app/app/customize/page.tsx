@@ -37,8 +37,11 @@ export default function CustomizePage() {
         const htmlWithBackground = prev.html.replace(
           "</body>",
           `<script>
-      document.body.style.backgroundImage = "url('${prev.previewImage}')";
-    </script></body>`
+    document.body.style.backgroundImage = "url('${prev.previewImage}')";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundPosition = "center";
+  </script></body>`
         );
 
         return {
@@ -61,8 +64,11 @@ export default function CustomizePage() {
       const htmlWithBackground = selectedTemplate.html.replace(
         "</body>",
         `<script>
-        document.body.style.backgroundImage = "url('${selectedTemplate.previewImage}')";
-      </script></body>`
+    document.body.style.backgroundImage = "url('${selectedTemplate.previewImage}')";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundPosition = "center";
+  </script></body>`
       );
 
       const blob = new Blob([htmlWithBackground], { type: "text/html" });
@@ -111,7 +117,7 @@ export default function CustomizePage() {
     setIsLoading(true);
     const params = new URLSearchParams({
       width: "120",
-      height: "120",
+      height: "240",
       seed: "42",
       model: "flux",
       nologo: "true",
@@ -146,6 +152,31 @@ export default function CustomizePage() {
         return {
           ...prev,
           previewImage: url,
+        };
+      });
+      setSelectedTemplate((prev) => {
+        if (!prev) return prev;
+
+        if (prev.html === "") {
+          return {
+            ...prev,
+            html: `<img src="${prev.previewImage}" />`,
+          };
+        }
+
+        const htmlWithBackground = prev.html.replace(
+          "</body>",
+          `<script>
+    document.body.style.backgroundImage = "url('${prev.previewImage}')";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundPosition = "center";
+  </script></body>`
+        );
+
+        return {
+          ...prev,
+          html: htmlWithBackground,
         };
       });
       if (!res.ok) throw new Error(data.error || "Failed to save image");
